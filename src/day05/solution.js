@@ -5,23 +5,25 @@ const rules = rulesSection.split("\n").map(line => line.split('|').map(Number));
 const updates = updatesSection.split("\n").map(line => line.split(',').map(Number));
 
 let totalMiddleSum = 0;
-let invalidUpdates = [];
+let fixedUpdates = [];
 
 updates.forEach(update => {
-    if (isUpdateValid(update, rules)) {
+    updateRules = fetchUpdateRules(update, rules);
+
+    if (isUpdateValid(update, updateRules)) {
         totalMiddleSum += findMiddlePage(update);
     } else {
-        invalidUpdates.push(update);
+        fixedUpdates.push(fixInvalidUpdate(update, updateRules));
     }
 });
 
 console.log(`The result for part 1 is: ${totalMiddleSum}`);
 
-const invalidUpdatesSum = invalidUpdates.reduce(
-    (sum, update) => sum + findMiddlePage(fixInvalidUpdate(update, rules)), 0
+const fixedUpdatesSum = fixedUpdates.reduce(
+    (sum, update) => sum + findMiddlePage(update), 0
 );
 
-console.log(`The result for part 2 is: ${invalidUpdatesSum}`);
+console.log(`The result for part 2 is: ${fixedUpdatesSum}`);
 
 function isUpdateValid(update, rules) {
     for (const [x, y] of rules) {
@@ -34,6 +36,7 @@ function isUpdateValid(update, rules) {
 
 function fixInvalidUpdate(invalidUpdate, rules) {
     const update = [...invalidUpdate];
+
     while(!isUpdateValid(update, rules)){
         for(const [x, y] of rules){
             if(checkRuleBreak(update, x, y)){
@@ -43,6 +46,10 @@ function fixInvalidUpdate(invalidUpdate, rules) {
         }
     }
     return update;
+}
+
+function fetchUpdateRules(update, rules) {
+    return rules.filter(([x, y]) => update.includes(x) || update.includes(y));
 }
 
 function checkRuleBreak(update, x, y) {
