@@ -1,15 +1,14 @@
 try {
-  const data = require('fs').readFileSync(`src/day08/input.txt`, 'utf8');
+  const data = require('fs').readFileSync('src/day08/input.txt', 'utf8');
   const lines = data.trim().split('\n').map(line => line.split(''));
   const antennaLists = findAntennas(lines);
-  const distAntinodes = findAntinodes(lines, antennaLists, true);
-  const antinodes = findAntinodes(lines, antennaLists);
+  const parts = [1, 2];
 
-  console.log(`The result for part 1 is: ${distAntinodes.size}`);
-  //printGrid(lines, distAntinodes);
-
-  console.log(`The result for part 2 is: ${antinodes.size}`);
-  //printGrid(lines, antinodes);
+  for(const part of parts) {
+    const antinodes = findAntinodes(lines, antennaLists, part === 1);
+    console.log(`The result for part ${part} is: ${antinodes.size}`);
+    //printGrid(lines, antinodes);
+  }
 } catch (e) {
   console.error(e);
 }
