@@ -15,18 +15,14 @@ try {
 
 function findAntennas(lines) {
   const antennas = {};
-  for (let y = 0; y < lines.length; y++) {
-    for (let x = 0; x < lines[y].length; x++) {
-      const char = lines[y][x];
-
+  lines.forEach((line, y) => {
+    line.forEach((char, x) => {
       if (char !== '.') {
-        if (!antennas[char]) {
-          antennas[char] = [];
-        }
+        antennas[char] = antennas[char] || [];
         antennas[char].push({ x, y });
       }
-    }
-  }
+    });
+  });
   return antennas;
 }
 
@@ -35,7 +31,7 @@ function findAntinodes(lines, antennas, distanceRule = false) {
   const antinodes = new Set();
 
   for (const antenna in antennas) {
-    let antinodesForAntenna = findAntinodesForAntennas(antennas[antenna], gridSize, distanceRule);
+    let antinodesForAntenna = findAntinodesForAntenna(antennas[antenna], gridSize, distanceRule);
 
     for (const antinode of antinodesForAntenna) {
       antinodes.add(`${antinode.x},${antinode.y}`);
@@ -44,7 +40,7 @@ function findAntinodes(lines, antennas, distanceRule = false) {
   return antinodes;
 }
 
-function findAntinodesForAntennas(antenna, gridSize, distanceRule = false) {
+function findAntinodesForAntenna(antenna, gridSize, distanceRule = false) {
   const antennaAntinodes = [];
 
   const isValid = (x, y) => x >= 0 && x < gridSize.x && y >= 0 && y < gridSize.y;
@@ -55,21 +51,25 @@ function findAntinodesForAntennas(antenna, gridSize, distanceRule = false) {
       let yd = antenna[i].y - antenna[j].y;
 
       if (distanceRule) {
-        if (isValid(antenna[i].x + xd, antenna[i].y + yd))
-          antennaAntinodes.push({ x: antenna[i].x + xd, y: antenna[i].y + yd });
+        let a1x = antenna[i].x + xd;
+        let a1y = antenna[i].y + yd;
+        if (isValid(a1x, a1y))
+          antennaAntinodes.push({ x: a1x, y: a1y });
 
-        if (isValid(antenna[j].x - xd, antenna[j].y - yd))
-          antennaAntinodes.push({ x: antenna[j].x - xd, y: antenna[j].y - yd });
+        let a2x = antenna[j].x - xd;
+        let a2y = antenna[j].y - yd;
+        if (isValid(a2x, a2y))
+          antennaAntinodes.push({ x: a2x, y: a2y });
       } else {
-        for (let k = -gridSize.x; k <= gridSize.x; k++) {
-          let newX = (antenna[i].x + xd * k);
-          let newY = (antenna[i].y + yd * k);
+          for (let k = -gridSize.x; k <= gridSize.x; k++) {
+            let newX = (antenna[i].x + xd * k);
+            let newY = (antenna[i].y + yd * k);
 
-          if (isValid(newX, newY)) {
-            antennaAntinodes.push({ x: newX, y: newY });
+            if (isValid(newX, newY)) {
+              antennaAntinodes.push({ x: newX, y: newY });
+            }
           }
         }
-      }
     }
   }
   return antennaAntinodes;
@@ -82,10 +82,7 @@ function printGrid(lines, antinodes) {
     const [x, y] = antinode.split(',').map(Number);
     if (grid[y] && grid[y][x] === '.') {
       grid[y][x] = '#';
-    } else if (grid[y] && grid[y][x] === '#') {
-      grid[y][x] = '@';
     }
   }
-
   console.log(grid.map(row => row.join('')).join('\n'));
 }
