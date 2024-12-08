@@ -3,12 +3,12 @@ try {
   const lines = data.trim().split('\n').map(line => line.split(''));
   const allDirections = [[1, 1], [1, -1], [-1, -1], [-1, 1], [0, 1], [0, -1], [1, 0], [-1, 0]];
   const parts = [
-    {id: 1, char: 'X', charOffset: 0, word: 'XMAS', foundWords: new Set(), directions: allDirections}, 
-    {id: 2, char: 'A', charOffset: 1, word: 'MAS', foundWords: new Set(), directions: allDirections.slice(0, 4)}];
+    { id: 1, char: 'X', charOffset: 0, word: 'XMAS', foundWords: new Set(), directions: allDirections },
+    { id: 2, char: 'A', charOffset: 1, word: 'MAS', foundWords: new Set(), directions: allDirections.slice(0, 4) }];
 
   const isValid = (x, y) => x >= 0 && x < lines.length && y >= 0 && y < lines[0].length;
 
-  for(const part of parts){
+  for (const part of parts) {
     lines.forEach((line, i) =>
       line.forEach((char, j) => {
         if (char === part.char) {
@@ -20,11 +20,11 @@ try {
             }).join('');
 
             if (word === part.word) {
-              if(part.id === 2){
-                
+              if (part.id === 2) {
+
                 const oppositeDirections = [[-dx, dy], [dx, -dy]];
 
-                for(const [odx, ody] of oppositeDirections){
+                for (const [odx, ody] of oppositeDirections) {
                   const oppositeWord = Array.from({ length: part.word.length }, (_, k) => {
                     const x = i + (k - part.charOffset) * odx;
                     const y = j + (k - part.charOffset) * ody;
@@ -45,7 +45,7 @@ try {
     );
     console.log(`The result for part ${part.id} is: ${part.foundWords.size}`);
   }
-  
+
 } catch (e) {
-    console.error(e);
-  }
+  console.error(e);
+}

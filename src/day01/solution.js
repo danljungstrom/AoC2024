@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-try{
+try {
     const data = fs.readFileSync('src/day01/input.txt', 'utf8');
     const lines = data.trim().split('\n');
     const list1 = [];
@@ -8,7 +8,7 @@ try{
 
     lines.forEach(line => {
         const [col1, col2] = line.split('   ').map(val => parseInt(val));
-        
+
         list1.push(col1);
         list2.push(col2);
     });

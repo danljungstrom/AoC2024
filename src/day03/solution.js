@@ -11,7 +11,7 @@ try {
       else if (match === "don't()" && part === 2) isEnabled = false;
       else if (isEnabled && Number(a) && Number(b)) sum += Number(a) * Number(b);
     });
-        
+
     console.log(`The result for part ${part} is: ${sum}`);
   }
 } catch (e) {
